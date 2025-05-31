@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SSE Test</title>
+</head>
+
+<body>
+    <h1>Server-Sent Events Test</h1>
+
+    <script>
+        const eventSource = new EventSource('http://localhost:8080/sse')
+
+        eventSource.addEventListener('welcome', (e) => {
+            console.log(e.data)
+        })
+
+        eventSource.addEventListener('update', (e) => {
+            const data = JSON.parse(e.data)
+            console.log(data)
+        })
+
+        eventSource.addEventListener('heartbeat', () => {
+            console.log(e.data)
+        })
+
+        eventSource.addEventListener('message', (e) => {
+            console.log(e.data)
+        })
+
+        eventSource.onerror = (e) => {
+            console.log(e)
+        }
+    </script>
+</body>
+
+</html>

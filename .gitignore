@@ -1,0 +1,11 @@
+.idea/
+*.exe
+*.exe~
+bin/
+log
+cmake-build-*
+.vscode
+*.log.*
+*.o
+config/
+pb/

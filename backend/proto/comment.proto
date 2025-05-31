@@ -1,0 +1,12 @@
+syntax = "proto3";
+option go_package = "./;pb";
+
+message Comment{
+  int64 user_id  = 1;
+  int64 user_name = 2;
+  string content = 3;
+  int64 pub_stamp = 4;
+  string pub_region = 5;
+
+  int64 room_id = 6;
+}

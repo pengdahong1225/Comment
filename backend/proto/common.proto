@@ -1,0 +1,24 @@
+syntax = "proto3";
+option go_package = "./;pb";
+
+// 节点类型
+enum ENNodeType{
+  EN_Node_Unknown = 0;
+  EN_Node_DBProxy = 1;
+  EN_Node_Judge = 2;
+  EN_Node_Question = 3;
+}
+// 节点状态
+enum ENNodeState{
+  EN_NODE_STATE_OFFLINE = 0;
+  EN_NODE_STATE_ONLINE = 1;
+}
+
+message PBNodeInfo{
+  int32 node_type = 1; // ENNodeType
+  int32 node_id = 2;
+  string ip = 3;
+  int32 port = 4;
+  int32 state = 5; // ENNodeState
+  string name = 6;
+}
