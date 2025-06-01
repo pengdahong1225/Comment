@@ -8,7 +8,7 @@ import (
 
 func TestSSEServer(t *testing.T) {
 	sse_server := NewServer()
-	sse_server.Run()
+	sse_server.Start()
 
 	// 模拟事件生产者
 	go func() {

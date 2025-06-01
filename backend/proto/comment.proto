@@ -1,9 +1,20 @@
 syntax = "proto3";
 option go_package = "./;pb";
 
+import "google/protobuf/empty.proto";
+
+// 评论服务接口
+service CommentService {
+  rpc CreateComment(CreateCommentRequest) returns (google.protobuf.Empty) {}
+}
+
+message CreateCommentRequest{
+   Comment comment = 1;
+}
+
 message Comment{
   int64 user_id  = 1;
-  int64 user_name = 2;
+  string user_name = 2;
   string content = 3;
   int64 pub_stamp = 4;
   string pub_region = 5;

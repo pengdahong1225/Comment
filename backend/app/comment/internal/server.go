@@ -1,12 +1,16 @@
 package internal
 
 import (
+	"Comment/app/comment/internal/biz"
 	"Comment/app/common/serverBase"
-	"Comment/app/gateway/internal/routers"
-	"Comment/app/gateway/internal/sse"
 	"Comment/module/signalHandler"
+	"Comment/proto/pb"
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
+	"net"
 )
 
 type Server struct {
@@ -22,26 +26,35 @@ func (receiver *Server) Init() error {
 	if err != nil {
 		return err
 	}
-
+	
 	return nil
 }
 
 func (receiver *Server) Start() {
-	// sse服务
-	sse.Instance().Start()
+	// grpc服务
+	netAddr := fmt.Sprintf("%s:%d", receiver.Host, receiver.Port)
+	listener, err := net.Listen("tcp", netAddr)
+	if err != nil {
+		panic(err)
+	}
+	defer listener.Close()
 
-	// http服务
-	engine := routers.Router()
-	dsn := fmt.Sprintf(":%d", receiver.Port)
+	grpcServer := grpc.NewServer()
+
+	// 健康检查
+	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
+	// 服务
+	commentSrv := &biz.CommentHandler{}
+	pb.RegisterCommentServiceServer(grpcServer, commentSrv)
 	go func() {
-		err := engine.Run(dsn)
+		err = grpcServer.Serve(listener)
 		if err != nil {
 			panic(err)
 		}
 	}()
 
 	// 服务注册
-	err := receiver.Register()
+	err = receiver.Register()
 	if err != nil {
 		panic(err)
 	}

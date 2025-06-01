@@ -3,10 +3,12 @@ package serverBase
 import (
 	"Comment/module/logger"
 	"Comment/module/registry"
+	"Comment/module/services"
 	"Comment/module/settings"
 	"Comment/proto/pb"
 	"errors"
 	"flag"
+	"fmt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -39,6 +41,11 @@ func (receiver *Server) Initialize() error {
 	if err != nil {
 		return err
 	}
+
+	// 初始化services manager
+	registryConfig := settings.Instance().RegistryConfig
+	dsn := fmt.Sprintf("%s:%d", registryConfig.Host, registryConfig.Port)
+	services.Init(dsn)
 
 	return nil
 }
@@ -78,4 +85,19 @@ func (receiver *Server) Register() error {
 	} else {
 		return errors.New("unknown srv type")
 	}
+}
+
+func (receiver *Server) UnRegister() error {
+	register, err := registry.NewRegistry()
+	if err != nil {
+		return err
+	}
+	return register.UnRegisterService(&pb.PBNodeInfo{
+		NodeType: int32(receiver.NodeType),
+		NodeId:   int32(receiver.NodeId),
+		Ip:       receiver.Host,
+		Port:     int32(receiver.Port),
+		State:    int32(pb.ENNodeState_EN_NODE_STATE_OFFLINE),
+		Name:     receiver.Name,
+	})
 }
