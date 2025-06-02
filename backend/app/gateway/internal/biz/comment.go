@@ -13,7 +13,7 @@ type CommentHandler struct {
 }
 
 // 新增评论接口
-func (receiver *CommentHandler) HandleAddComment(ctx *gin.Context) {
+func (receiver CommentHandler) HandleAddComment(ctx *gin.Context) {
 	// 参数校验
 	form, ok := validate(ctx, &models.AddCommentForm{})
 	if !ok {
