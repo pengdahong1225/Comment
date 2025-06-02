@@ -2,7 +2,6 @@ package routers
 
 import (
 	"Comment/app/gateway/internal/biz"
-	"Comment/app/gateway/internal/frame_moudle"
 	"Comment/app/gateway/internal/middlewares"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -11,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"Comment/app/gateway/internal/sse"
 )
 
 func Router() *gin.Engine {
@@ -30,7 +30,7 @@ func Router() *gin.Engine {
 
 	// 路由
 	group := r.Group("/api/v1")
-	group.GET("/sse", middlewares.AuthLogin(), frame_moudle.FM.SseServer.Handler)
+	group.GET("/sse", middlewares.AuthLogin(), sse.Instance().Handler)
 	group.POST("/api/v1/comment", middlewares.RateLimitMiddleware(1*time.Second, 10), middlewares.AuthLogin(), biz.CommentHandler{}.HandleAddComment)
 
 	return r
