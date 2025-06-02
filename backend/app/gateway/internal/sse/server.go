@@ -46,7 +46,7 @@ func (s *Server) Start() {
 				logrus.Infof("SSE Client %s Disconnected", clientID)
 				s.hub.RemoveClient(clientID)
 			// todo 服务器事件
-			case event := <-s.eventChan:
+			//case event := <-s.eventChan:
 
 			}
 		}
