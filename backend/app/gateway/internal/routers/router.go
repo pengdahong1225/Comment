@@ -2,7 +2,7 @@ package routers
 
 import (
 	"Comment/app/gateway/internal/biz"
-	"Comment/app/gateway/internal/middlewares"
+	"Comment/module/middlewares"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"Comment/app/gateway/internal/sse"
 )
 
 func Router() *gin.Engine {
@@ -30,7 +29,6 @@ func Router() *gin.Engine {
 
 	// 路由
 	group := r.Group("/api/v1")
-	group.GET("/sse", middlewares.AuthLogin(), sse.Instance().Handler)
 	group.POST("/api/v1/comment", middlewares.RateLimitMiddleware(1*time.Second, 10), middlewares.AuthLogin(), biz.CommentHandler{}.HandleAddComment)
 
 	return r
