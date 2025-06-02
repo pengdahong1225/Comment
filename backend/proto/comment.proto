@@ -10,6 +10,7 @@ service CommentService {
 
 message CreateCommentRequest{
    Comment comment = 1;
+   string pub_ip = 2;
 }
 
 message Comment{

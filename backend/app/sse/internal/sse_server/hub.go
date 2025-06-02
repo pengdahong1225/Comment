@@ -51,3 +51,7 @@ func (h *Hub) RemoveClient(id string) {
 	// 最后再删除clients
 	h.clients.Delete(id)
 }
+
+func (h *Hub) PushMessage(roomId int64, data []byte) {
+
+}

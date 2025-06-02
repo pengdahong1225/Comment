@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "./;pb";
+
+import "google/protobuf/empty.proto";
+import "comment.proto";
+
+// sse服务接口
+service  SSEService {
+  rpc Report(ReportRequest) returns (google.protobuf.Empty) {}
+}
+
+message ReportRequest{
+  Comment comment = 1;
+}

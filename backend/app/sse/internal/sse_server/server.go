@@ -16,21 +16,19 @@ var (
 func Instance() *Server {
 	once.Do(func() {
 		instance = &Server{
-			eventChan:  make(chan Event),
-			register:   make(chan *Client),
-			unregister: make(chan string),
 			hub:        NewHub(),
+			register:   make(chan *Client, 1024),
+			unregister: make(chan string, 1024),
 		}
 	})
 	return instance
 }
 
 type Server struct {
-	eventChan  chan Event
+	hub *Hub
+
 	register   chan *Client
 	unregister chan string
-
-	hub *Hub
 }
 
 func (s *Server) Start() {
@@ -45,16 +43,9 @@ func (s *Server) Start() {
 			case clientID := <-s.unregister:
 				logrus.Infof("SSE Client %s Disconnected", clientID)
 				s.hub.RemoveClient(clientID)
-			// todo 服务器事件
-			//case event := <-s.eventChan:
-
 			}
 		}
 	}()
-}
-
-func (s *Server) AppendEvent(e *Event) {
-	s.eventChan <- *e
 }
 
 func (s *Server) Handler(ctx *gin.Context) {
@@ -86,4 +77,8 @@ func (s *Server) Handler(ctx *gin.Context) {
 		//  退出注销该客户端
 		s.unregister <- client.ID
 	}()
+}
+
+func (s *Server) PushMsg(roomId int64, data []byte) {
+	s.hub.PushMessage(roomId, data)
 }

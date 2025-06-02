@@ -2,6 +2,8 @@ package internal
 
 import (
 	"Comment/app/comment/internal/biz"
+	"Comment/app/comment/internal/mysql"
+	"Comment/app/comment/internal/redis"
 	"Comment/app/common/serverBase"
 	"Comment/module/signalHandler"
 	"Comment/proto/pb"
@@ -26,7 +28,16 @@ func (receiver *Server) Init() error {
 	if err != nil {
 		return err
 	}
-	
+
+	err = mysql.Init()
+	if err != nil {
+		return err
+	}
+	err = redis.Init()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

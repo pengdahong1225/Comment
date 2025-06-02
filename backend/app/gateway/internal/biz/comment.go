@@ -40,6 +40,7 @@ func (receiver CommentHandler) HandleAddComment(ctx *gin.Context) {
 			PubRegion: "",
 			RoomId:    form.RoomId,
 		},
+		PubIp: ctx.ClientIP(),
 	}
 	_, err = client.CreateComment(ctx, req)
 	if err != nil {

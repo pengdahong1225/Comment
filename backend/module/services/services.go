@@ -49,3 +49,7 @@ func (m *ConnectionManager) GetConnection(serviceName string) (*grpc.ClientConn,
 
 	return conn, err
 }
+
+func (m *ConnectionManager) GetConnectionByNodeId(serviceName string, nodeId string) (*grpc.ClientConn, error) {
+	return nil, nil
+}
